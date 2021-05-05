@@ -91,12 +91,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Romain\Documents\Cours\revue 2 %28urgent%29\code\mysql-connector-c-6.1.11-win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\RomainFLEMAL\Documents\revue 2 %28urgent%29\Projet-serre\C++\BDD\mysql-connector-c-6.1.11-win32\include;C:\Users\Romain\Documents\Cours\revue 2 %28urgent%29\code\mysql-connector-c-6.1.11-win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Romain\Documents\Cours\revue 2 %28urgent%29\code\mysql-connector-c-6.1.11-win32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\RomainFLEMAL\Documents\revue 2 %28urgent%29\Projet-serre\C++\BDD\mysql-connector-c-6.1.11-win32\lib;C:\Users\Romain\Documents\Cours\revue 2 %28urgent%29\code\mysql-connector-c-6.1.11-win32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
