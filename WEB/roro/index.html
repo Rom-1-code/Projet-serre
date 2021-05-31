@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <H1>Hello</H1>
+    <ul id="list">
+        <li>Premier élément</li>
+        <p id="eventMessage"></p>
+        <p id="Msg"></p>
+    </ul>
+
+    <div>
+        <h2 id="CHO">Température actuelle :</h2>
+    </div>
+    <div>
+        <h2 id="humid">Humidité dans l'air :</h2>
+    </div>
+
+    <canvas id="myChart" height="90"></canvas>
+    <!-- CREATION SOCKET -->
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="path/to/chartjs/dist/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const socket = io();
+        // écoute du socket news
+        socket.on('news', function(msg) {
+            console.log(msg)
+            console.log(msg.Temperature_Int);
+            displayEventMessage("eventMessage", msg);
+            displayEventMessage("Msg", msg.Temperature_Int);
+            displayEventMessage("Msg", msg.Temperature_Int);
+            displayEventMessage("Msg", msg.Temperature_Int);
+            displayEventMessage("Msg", msg.Temperature_Int);
+
+            let tab = Array.from(msg, valeur => {
+                return {
+                    Valeur: valeur.Temperature_Int
+                }
+            })
+            return tab;
+        });
+
+        function displayEventMessage(id, msgEvent) {
+            document.getElementById(id).innerHTML = JSON.stringify(msgEvent);
+        }
+    </script>
+
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: 'Valeurs pour la journée du {...}',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>
+
+
+</script>
