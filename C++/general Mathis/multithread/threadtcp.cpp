@@ -14,6 +14,7 @@ void workerThreadsend()
 	clienttcp = new client;
 	clienttcp->createsocket();
 	clienttcp->connectnode();
+	
 }
 
 void workerThreadreceiv()
@@ -22,6 +23,7 @@ void workerThreadreceiv()
 	servertcp = new server;
 	servertcp->createsocket();
 	servertcp->connect();
+	
 }
 
 int main(int argc, char ** argv)
@@ -29,8 +31,8 @@ int main(int argc, char ** argv)
 	
 		std::thread worker(workerThreadreceiv);
 		worker.detach();
-		//std::thread worker2(workerThreadsend);
-		//worker2.detach();
+		std::thread worker2(workerThreadsend);
+		worker2.detach();
 	
 		_getch();
 		//system("pause");

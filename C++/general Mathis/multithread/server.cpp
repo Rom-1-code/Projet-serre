@@ -1,14 +1,22 @@
 #include "server.h"
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <iostream>
 #include <stdio.h>
 #include <thread>
 #include <mutex>
 #include <stdlib.h>
+#include <WS2tcpip.h>
+#pragma comment (lib,"ws2_32.lib")
 
 
 
-using namespace std;
-
+//using namespace std;
+/*
+void ReceivThread(SOCKET client)
+{
+	send(client, "Coucou", 6, 0);
+}
+*/
 void ClientThread(SOCKET client)
 {
 	send(client, "Coucou", 6, 0);
@@ -19,19 +27,14 @@ void server::WorkerThreadConnect(server* server)
 	while (1)
 	{
 		int sinsize = sizeof(server->mystruct.csin);
-		SOCKET clientSocket = accept(server->mystruct.sock,(SOCKADDR *)&server->mystruct.csin, &sinsize);
+		server->mystruct.csock = accept(server->mystruct.sock,(SOCKADDR *)&server->mystruct.csin, &sinsize);
 
-		std::thread clientThread(ClientThread, clientSocket);
+		std::thread clientThread(ClientThread, server->mystruct.csock);
 		clientThread.detach();
 	}
 	
 }
 
-
-tcpstruct* server::getstruct()
-{
-	return &this->mystruct;
-}
 
 void server::createsocket()
 {
@@ -45,19 +48,13 @@ void server::createsocket()
 	
 	if (sock1 == INVALID_SOCKET)
 	{
-		cout << "erreur de creation" << endl;
+		std::cout << "erreur de creation" << std::endl;
 	}
 	else
 	{
 		mystruct.sock = sock1;
-		cout << "socket serveur valide" << endl;
+		std::cout << "socket serveur valide" << std::endl;
 	}
-	
-	
-	
-	
-		
-	
 	
 #endif
 }
@@ -65,7 +62,7 @@ void server::createsocket()
 void server::connect()
 {
 	int resbindfct;
-
+	
 
 	
 	mystruct.sin = { 0 };
@@ -74,27 +71,28 @@ void server::connect()
 
 	mystruct.sin.sin_family = AF_INET;
 
-	mystruct.sin.sin_port = htons(2500);
-																																																																																	
-	resbindfct = bind(mystruct.sock, (SOCKADDR *)&mystruct.sin, sizeof(mystruct.sin));
+	mystruct.sin.sin_port = htons(port);
+	
+	resbindfct = bind(mystruct.sock, (SOCKADDR *)&mystruct.sin,sizeof(mystruct.sin));
+	
 	
 	if (resbindfct != SOCKET_ERROR)
 	{
-		cout << "client connecte sur le port " <<port<<endl;
+		std::cout << "client connecte sur le port " <<port<< std::endl;
 		listen(mystruct.sock, 5);
 	}
 	else
 	{
-		cout << "erreur de bind" << endl;
+		std::cout << "erreur de bind" << std::endl;
 	}
 	
 
-	//mystruct.csin = { 0 };
+	mystruct.csin = { 0 };
 	
 	std::thread workerconnect(WorkerThreadConnect,this);
 	workerconnect.detach();
 }
-
+/*
 void server::receiv()
 {
 	int recvLen = 0;
@@ -104,7 +102,7 @@ void server::receiv()
 
 
 
-	recvsock = recv(socketclient, buffer, taille - 1, 0);
+	//recvsock = recv(socketclient, buffer, taille - 1, 0);
 
 
 
@@ -152,13 +150,13 @@ void server::receiv()
 		closesocket(socketclient);
 	}
 }
-
+*/
 
 
 
 void server::readbuffer()
 {
-	cout << buffer << endl;
+	std::cout << buffer << std::endl;
 }
 
 void server::close()

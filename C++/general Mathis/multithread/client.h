@@ -9,14 +9,15 @@
 	{
 		SOCKET sock;
 		SOCKADDR_IN sin;
+		char buffertosend[9] = " yo node";
 	};
 
 	class client
 	{
 	private:
 
-		SOCKET sock;
-		char buffertosend[9] = " yo node";
+		
+		
 		clienttcpstruct mystruct;
 
 
@@ -25,7 +26,8 @@
 		clienttcpstruct* getstruct();
 		void createsocket();
 		void connectnode();
-		void senddata();
+		static void WorkerThreadSend(client* client);
+		//void senddata();
 		void close();
 	};
 

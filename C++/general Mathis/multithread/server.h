@@ -18,19 +18,20 @@ class server
 private:
 
 	int port = 2590;
-	int socketclient;
 	char buffer[10];
 	int taille = 10;
 	tcpstruct mystruct;
+	int humi = 50;
+	int tempext = 25;
+	int tempint = 23;
 
 
 
 public:
 
 	void createsocket();
-	tcpstruct* getstruct();
 	void connect();
-	void receiv();
+	//void receiv();
 	void readbuffer();
 	void close();
 
