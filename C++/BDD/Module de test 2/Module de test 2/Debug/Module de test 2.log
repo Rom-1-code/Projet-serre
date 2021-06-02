@@ -1,0 +1,3 @@
+﻿  main.cpp
+e:\module de test 2\module de test 2\main.cpp(26): warning C4101: 'archiveDate' : variable locale non référencée
+  Module de test 2.vcxproj -> E:\Module de test 2\Debug\Module de test 2.exe
