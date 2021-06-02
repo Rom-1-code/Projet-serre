@@ -5,6 +5,7 @@
 
 
 
+
 struct tcpstruct
 {
 	SOCKET sock;
@@ -21,9 +22,9 @@ private:
 	char buffer[10];
 	int taille = 10;
 	tcpstruct mystruct;
-	int humi = 50;
+	float hygro;
 	int tempext = 25;
-	int tempint = 23;
+	float tempint;
 
 
 
@@ -31,9 +32,12 @@ public:
 
 	void createsocket();
 	void connect();
-	//void receiv();
 	void readbuffer();
 	void close();
+	/*
+	void sethygro(float hygro);
+	void settempint(float tempint);
+	*/
 
 
 	static void WorkerThreadConnect(server* server);

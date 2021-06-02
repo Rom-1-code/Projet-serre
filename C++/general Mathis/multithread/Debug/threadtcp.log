@@ -1,4 +1,6 @@
 ﻿  client.cpp
 c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\client.cpp(37): warning C4309: '=' : troncation de valeur de constante
 c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\client.cpp(60): warning C4101: 'restoanalyse' : variable locale non référencée
+  threadtcp.cpp
+  Génération de code en cours...
   threadtcp.vcxproj -> C:\Users\mclermont\Desktop\Projet-serre\C++\general Mathis\multithread\Debug\threadtcp.exe

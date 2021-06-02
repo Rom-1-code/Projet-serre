@@ -92,66 +92,6 @@ void server::connect()
 	std::thread workerconnect(WorkerThreadConnect,this);
 	workerconnect.detach();
 }
-/*
-void server::receiv()
-{
-	int recvLen = 0;
-	int recvsock;
-	bool findetrame = false;
-	int i = 0;
-
-
-
-	//recvsock = recv(socketclient, buffer, taille - 1, 0);
-
-
-
-	buffer[taille] = 0x00;
-
-	i = strlen(buffer);
-
-
-	if (buffer[i - 1] == ';') //le message se termine bien par ;
-	{
-		findetrame = true;
-	}
-
-
-
-	if (findetrame == true)
-	{
-		if (strlen(buffer) == 5 && buffer[0] == 't' && buffer[1] == 'e' && buffer[2] == 's' && buffer[3] == 't' && buffer[4] == ';')
-		{
-			send(socketclient, "c'est un envoi test", 19, 0);
-			send(socketclient, "\n", 2, 0);
-			send(socketclient, "arret de la connexion", 21, 0);
-			closesocket(socketclient);
-		}
-		else
-		{
-			send(socketclient, "bonne commande mais pas de caractere de fin de trame", 52, 0);
-			send(socketclient, "\n", 2, 0);
-			send(socketclient, "arret de la connexion", 21, 0);
-			closesocket(socketclient);
-		}
-	}
-	else if (strlen(buffer) == 4 && buffer[0] == 't' && buffer[1] == 'e' && buffer[2] == 's' && buffer[3] == 't')
-	{
-		send(socketclient, "pas de caractere de fin de trame", 51, 0);
-		send(socketclient, "\n", 2, 0);
-		send(socketclient, "arret de la connexion", 21, 0);
-		closesocket(socketclient);
-	}
-	else
-	{
-		send(socketclient, "mauvaise commande", 17, 0);
-		send(socketclient, "\n", 2, 0);
-		send(socketclient, "arret de la connexion", 21, 0);
-		closesocket(socketclient);
-	}
-}
-*/
-
 
 
 void server::readbuffer()
@@ -161,6 +101,17 @@ void server::readbuffer()
 
 void server::close()
 {
-	
 	closesocket(mystruct.sock);
 }
+
+/*
+void server::sethygro(float hygro)
+{
+	this->hygro = hygro;
+}
+
+void server::settempint(float tempint)
+{
+	this->tempint = tempint;
+}
+*/

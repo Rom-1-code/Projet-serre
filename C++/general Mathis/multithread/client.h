@@ -12,7 +12,10 @@
 struct clienttcpstruct
 {
 	SOCKET sock;
+	SOCKET sockparameters;
 	SOCKADDR_IN sin;
+	SOCKADDR_IN sinparameters;
+	
 	char buffertosend[9] = "yo node";
 	char buffer[60];
 };
@@ -33,13 +36,16 @@ private:
 	std::map<uint16_t, modbusrequest> requests;
 	clienttcpstruct mystruct;
 
-	int hygromerie;
-	int temperature;
+	float hygrometrie;
+	float temperature;
+	bool hygroset=false;
+	bool tempset=false;
 
 		
 public:
 
-	void addModbusRequest(modbusrequest request) {
+	void addModbusRequest(modbusrequest request) 
+	{
 		synchro.lock();
 		requests[request.transactionId] = request;
 		synchro.unlock();
@@ -61,12 +67,16 @@ public:
 		return error;
 	}
 
-
+	clienttcpstruct* getstruct();
 	void createsocket();
 	void connectnode();
-	int getvaluetosend();
 	static void WorkerThreadSend(client* client);
 	static void WorkThreadReceiv(client* client);
+	static void WorkerThreadParameters(client* client);
 	static void sendReadRequest(client* client, int startAddress, int nbWord);
-	friend int getvaluetosend();
+	float gethygro();
+	float gettemp();
+	void settemp(uint32_t temp);
+	void sethygro(uint32_t hygro);
+	
 };
