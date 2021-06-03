@@ -4,9 +4,9 @@ var net = require('net');
 const port = 2590;
 const host = '192.168.64.183';
 
-// Create a new TCP client.
+// création d'un nouveau client
 const client = new net.Socket();
-// Send a connection request to the server.
+// requette de connexion au serveur
 client.connect({ port: port, host: host }),
     function() {
         // If there is no error, the server has accepted the request and created a new 
@@ -18,11 +18,11 @@ client.connect({ port: port, host: host }),
     };
 
 client.setEncoding('utf8');
-
+//afficher les données envoyer par le serveur
 client.on('data', function(data) {
     console.log('Data from server:' + data);
 });
-
+// message de fin de connexion
 setTimeout(function() {
     client.end('Bye bye server');
 }, 10000);

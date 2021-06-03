@@ -8,13 +8,9 @@
 #include <string>
 #include <ctime>
 
-//using namespace std;
-
-
-
 
 int main() {
-	//Déclaration de la structure de type MYSQL
+	//Déclaration de la structure de récupération de la date et l'heure
 	time_t actuel = time(0);
 	tm *ltm = localtime(&actuel);
 	
@@ -25,13 +21,14 @@ int main() {
 	int minutes = ltm->tm_min;
 	int secondes = ltm->tm_sec;
 	char DATE[11];
+	//Formatation des données en annee-mois-jour pour la base de donnée
 	snprintf(DATE, 11, "%d-0%d-%d\n", annee, mois, jour);
 	string date = DATE;
-
+	//Formatation des données en heurs:minutes:secondes pour la base de donnée
 	char HEURE[10];
 	snprintf(HEURE, 10, "%d:%d:%d\n", heures, minutes, secondes);
 	string heure = HEURE;
-
+	//Récupération de valeur de la classe ES
 	ES* carte;
 	carte = new ES();
 	bdd BDD;
@@ -52,28 +49,31 @@ int main() {
 	const char * login = "root";
 	const char * password = "root";
 	const char * bdd = "Projet_Serre";
-
+	//INSTER DANS la Base de donnée
 	std::string request = "INSERT INTO `ValeurNum` ( `Temperature_int`, `Temperature_Ext`, `HumiditeAir`, `HumiditeTerre`, `Date`, `Heure`, `Etat`) VALUES ("+ tempint +", "+tempext+", " + hygroair + ", "+humiterre+", '"+DATE+"', '" + HEURE + "', '1');";
 	
 	bool resultStartBdd;
 	bool resultConnexionBdd;
 	bool resultQuery;
-
+	//initialisation de la base de donnée
 	resultStartBdd = BDD.StartBdd();
 
 	if (resultStartBdd == true)
 	{
+		//connexion à la base de donnée
 		resultConnexionBdd = BDD.connexionBdd(host, login, password, bdd);
 
 		if (resultConnexionBdd == true)
 		{
 			cout << "Connexion a la BDD OK !" << endl;
+			//Si connexion ok on envoie la requet
 			resultQuery = BDD.query(request.c_str());
-
+			
 			if (resultQuery == true)
 			{
 				cout << "Insertion en base OK" << endl;
 			}
+			//Sinon...
 			else
 			{
 				

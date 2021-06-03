@@ -11,16 +11,16 @@ const server = require('http').Server(app)
 const io = require('socket.io')(server)
     // ----------------TCP-------------
 let server1 = net.createServer(connection => {
-    // run all of this when a client connects
+    //nouvelle connexion à la connexion du client
     console.log("new connection");
 
     connection.on("data", data => {
-        // run this when data is received
-        console.log(data.toString()); // prints the data
+        //fonction qui permet d'afficher les données reçu dans la console
+        console.log(data.toString());
     });
 });
 server1.listen(3000, () => {
-    console.log("waiting for a connection"); // prints on start
+    console.log("waiting for a connection");
 });
 
 var db = mysql.createConnection({
