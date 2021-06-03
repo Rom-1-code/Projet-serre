@@ -1,5 +1,5 @@
-#include "server.h"
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include "server.h"
 #include <iostream>
 #include <stdio.h>
 #include <thread>
@@ -8,31 +8,85 @@
 #include <WS2tcpip.h>
 #pragma comment (lib,"ws2_32.lib")
 
+#include "DataQueue.h"
+#include <algorithm>
 
 
-//using namespace std;
-/*
-void ReceivThread(SOCKET client)
-{
-	send(client, "Coucou", 6, 0);
-}
-*/
+std::mutex server::synchro;
+std::vector<SOCKET> server::connectedClients;
+
 void ClientThread(SOCKET client)
 {
 	send(client, "Coucou", 6, 0);
 }
 
+void server::ClientThreadLocal(SOCKET client)
+{
+	char buffer[10];
+	int n = 0;
+	
+
+	while(n >= 0)
+	{
+		
+		n = 0;
+
+		if ((n = recv(client,buffer,10, 0)) < 0)
+		{
+			Sleep(100);
+		}
+			//printf("temperature recupere = %f ", buffer[0]);
+	}
+
+	printf("Client deconnecte\n");
+	synchro.lock();
+
+	std::vector<SOCKET>::iterator it = std::find(connectedClients.begin(), connectedClients.end(), client);
+	if (it != connectedClients.end())
+	{
+		connectedClients.erase(it);
+	}
+
+	synchro.unlock();
+}
+
 void server::WorkerThreadConnect(server* server)
 {
-	while (1)
-	{
-		int sinsize = sizeof(server->mystruct.csin);
-		server->mystruct.csock = accept(server->mystruct.sock,(SOCKADDR *)&server->mystruct.csin, &sinsize);
+	int sinsize = sizeof(server->mystruct.csinrecup);
 
-		std::thread clientThread(ClientThread, server->mystruct.csock);
+	SOCKET clientSock = accept(server->mystruct.sockrecup,(SOCKADDR *)&server->mystruct.csinrecup, &sinsize);
+
+	if (clientSock != INVALID_SOCKET)
+	{
+		synchro.lock();
+		connectedClients.push_back(clientSock);
+		synchro.unlock();
+		std::thread clientThread(ClientThread, server->mystruct.sockrecup);
 		clientThread.detach();
 	}
 	
+}
+
+void server::WorkerThreadConnectClient(server* server)
+{
+	while (1)
+	{
+		SerreData * data = DataQueue::getInstance()->getData();
+		if (data != nullptr)
+		{
+			synchro.lock();
+			char buffer[500];
+			snprintf(buffer, 500, "%.2f;%.2f;%.2f;%.2f\n", data->temperatureInterieure, data->humiditeInterieure, data->temperatureExterieure, data->humiditeSol);
+			for(int i = 0; i < connectedClients.size(); i++)
+			{
+				send(connectedClients[i], buffer, strlen(buffer), 0);
+			}
+
+			synchro.unlock();
+		}
+
+		Sleep(50);
+	}
 }
 
 
@@ -44,16 +98,17 @@ void server::createsocket()
 	WSADATA wsaData;
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
 
-	int sock1 = socket(AF_INET, SOCK_STREAM, 0);
-	
-	if (sock1 == INVALID_SOCKET)
+
+	int sock2 = socket(AF_INET, SOCK_STREAM, 0);
+
+	if (sock2 == INVALID_SOCKET)
 	{
-		std::cout << "erreur de creation" << std::endl;
+		std::cout << "erreur de creation du socket local" << std::endl;
 	}
 	else
 	{
-		mystruct.sock = sock1;
-		std::cout << "socket serveur valide" << std::endl;
+		mystruct.sockrecup = sock2;
+		std::cout << "socket local valide" << std::endl;
 	}
 	
 #endif
@@ -61,36 +116,36 @@ void server::createsocket()
 
 void server::connect()
 {
-	int resbindfct;
-	
+
+	int resbindfct2;
 
 	
 	mystruct.sin = { 0 };
-
 	mystruct.sin.sin_addr.s_addr = htonl(INADDR_ANY);
-
 	mystruct.sin.sin_family = AF_INET;
+	mystruct.sin.sin_port = htons(port1);
 
-	mystruct.sin.sin_port = htons(port);
-	
-	resbindfct = bind(mystruct.sock, (SOCKADDR *)&mystruct.sin,sizeof(mystruct.sin));
-	
-	
-	if (resbindfct != SOCKET_ERROR)
+	resbindfct2 = bind(mystruct.sockrecup, (SOCKADDR *)&mystruct.sin, sizeof(mystruct.sin));
+
+
+	if (resbindfct2 != SOCKET_ERROR)
 	{
-		std::cout << "client connecte sur le port " <<port<< std::endl;
-		listen(mystruct.sock, 5);
+		std::cout << "client local connecte sur le port " << port1 << std::endl;
+		listen(mystruct.sockrecup, 5);
 	}
 	else
 	{
-		std::cout << "erreur de bind" << std::endl;
+		std::cout << "erreur de bind sur le port local " <<port1<< std::endl;
 	}
 	
 
-	mystruct.csin = { 0 };
+	//mystruct.csin = { 0 };
+	mystruct.csinrecup = { 0 };
 	
 	std::thread workerconnect(WorkerThreadConnect,this);
 	workerconnect.detach();
+	std::thread workerconnectclient(WorkerThreadConnectClient,this);
+	workerconnectclient.detach();
 }
 
 
@@ -104,14 +159,7 @@ void server::close()
 	closesocket(mystruct.sock);
 }
 
-/*
-void server::sethygro(float hygro)
+tcpstruct* server::getstruct()
 {
-	this->hygro = hygro;
+	return &mystruct;
 }
-
-void server::settempint(float tempint)
-{
-	this->tempint = tempint;
-}
-*/

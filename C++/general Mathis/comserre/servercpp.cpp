@@ -1,3 +1,4 @@
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "servercpp.h"
 #include <iostream>
 #include <sstream>
@@ -5,7 +6,6 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <WS2tcpip.h>
 #include <fstream>
 #include <vector>

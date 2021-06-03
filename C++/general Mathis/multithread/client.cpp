@@ -1,5 +1,5 @@
-#include "client.h"
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include "client.h"
 #include <iostream>
 #include <thread>
 #include <mutex>
@@ -11,29 +11,18 @@
 #include <WS2tcpip.h>
 #pragma comment (lib,"ws2_32.lib")
 
+#include "DataQueue.h"
+
 
 void SendThread(client * client)
 {
 	while (1)
 	{
 		client::sendReadRequest(client, 100, 4);
-
-		Sleep(100);
+		Sleep(5000);
 	}
 }
 
-void SendParameters(client* client)
-{
-	char buffer[6];
-	std::stringstream ss;
-
-
-	ss << std::hex << client->gethygro();
-	while (1)
-	{
-	
-	}
-}
 
 void client::sendReadRequest(client* client, int startAddress, int nbWord)
 {
@@ -41,7 +30,7 @@ void client::sendReadRequest(client* client, int startAddress, int nbWord)
 
 	int transactionId = client->transactionId++;
 
-	buffer[0] = (transactionId & 0xFF00) >> 8;
+	buffer[0] = (transactionId & 0xFF00) >> 8; 
 	buffer[1] = transactionId & 0x00FF;
 	buffer[2] = 0x00;
 	buffer[3] = 0x00;
@@ -67,7 +56,8 @@ void client::sendReadRequest(client* client, int startAddress, int nbWord)
 void ReceivThread(client* client)
 {
 	char buffer[200];
-	float f;
+	float temperatureInterieure;
+	float humiditeInterieure;
 	uint32_t tempint;
 	uint32_t hygro;
 	uint32_t restoanalyse;
@@ -110,9 +100,9 @@ void ReceivThread(client* client)
 			printf("\n");
 
 			sscanf_s(str.c_str(), "%x", &tempint);
-			f = *((float*)&tempint);
-			printf(" la temperature est a %.3f degre avec le code hexa 0x%08x  \n",f,tempint);
-			client->settemp(tempint);
+			temperatureInterieure = *((float*)&tempint);
+			printf(" la temperature est a %.3f degre avec le code hexa 0x%08x  \n",temperatureInterieure,tempint);
+			
 			
 
 			str = "0x";
@@ -123,9 +113,11 @@ void ReceivThread(client* client)
 			}
 			printf("\n");
 			sscanf_s(str.c_str(), "%x", &hygro);
-			f = *((float*)&hygro);
-			printf(" l'hygrometrie est a %.3f pourcent avec le code hexa 0x%08x  \n",f, hygro);
-			client->sethygro(hygro);
+			humiditeInterieure = *((float*)&hygro);
+			printf(" l'hygrometrie est a %.3f pourcent avec le code hexa 0x%08x  \n",humiditeInterieure, hygro);
+			
+
+			DataQueue::getInstance()->addData(new SerreData(temperatureInterieure, humiditeInterieure, 0, 0));
 		}
 		else
 		{
@@ -162,10 +154,6 @@ void client::WorkerThreadSend(client* client)
 	clientThread.detach();
 }
 
-void client::WorkerThreadParameters(client* client)
-{
-	std::thread clientparameters(SendParameters, client);
-}
 
 void client::createsocket()
 {
@@ -173,7 +161,7 @@ void client::createsocket()
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
 
 	mystruct.sock = socket(AF_INET, SOCK_STREAM, 0);
-	mystruct.sockparameters = socket(AF_INET, SOCK_STREAM, 0);
+	
 
 	if (mystruct.sock == INVALID_SOCKET)
 	{
@@ -184,57 +172,33 @@ void client::createsocket()
 		printf("\n");
 		printf("socket carte cree \n");
 	}
+
 }
 
-void client::connectnode()
+void client::connectcard()
 {
 	struct hostent *hostinfo = NULL;
-	SOCKADDR_IN sin = { 0 }; /* initialise la structure avec des 0 */
+	SOCKADDR_IN sin = { 0 }; 
 	const char *hostname = "192.168.65.8";
-
-
-
-	/*
-		if (hostinfo == NULL)
-		{
-			fprintf(stderr, "Unknown host %s.\n", hostname);
-			exit(EXIT_FAILURE);
-		}
-	*/
-
-
+	
 
 	mystruct.sin.sin_addr.s_addr = inet_addr(hostname);
 	mystruct.sin.sin_family = AF_INET;
 	mystruct.sin.sin_port = htons(502);
 
-	mystruct.sinparameters.sin_addr.s_addr = inet_addr("127.0.0.1");
-	mystruct.sin.sin_family = AF_INET;
-	mystruct.sin.sin_port = htons(2525);
+	
+	do
+	{
+		printf("Tentative de connexion a la carte.. \n");
 
-	if (connect(mystruct.sock, (SOCKADDR *)&mystruct.sin, sizeof(SOCKADDR)) == SOCKET_ERROR)
-	{
-		printf("erreur de connexion a la carte \n");
-	}
-	else
-	{
-		printf("connecte a la carte \n");
-		std::thread workersend(WorkerThreadSend, this);
-		workersend.detach();
-		std::thread workerreceiv(WorkThreadReceiv, this);
-		workerreceiv.detach();
-	}
+	} while (connect(mystruct.sock, (SOCKADDR *)&mystruct.sin, sizeof(SOCKADDR)) == SOCKET_ERROR);
 
-	if (connect(mystruct.sockparameters, (SOCKADDR *)&mystruct.sinparameters, sizeof(SOCKADDR)) == SOCKET_ERROR)
-	{
-		printf("erreur de connexion au serveur tcp \n");
-	}
-	else
-	{
-		printf("connecte au serveur tcp \n");
-		std::thread workerparameters(WorkerThreadParameters, this);
-		workerparameters.detach();
-	}
+	printf("connecte a la carte \n");
+	std::thread workersend(WorkerThreadSend, this);
+	workersend.detach();
+	std::thread workerreceiv(WorkThreadReceiv, this);
+	workerreceiv.detach();
+	
 }
 
 clienttcpstruct* client::getstruct()
@@ -242,26 +206,5 @@ clienttcpstruct* client::getstruct()
 	return &mystruct;
 }
 
-float client::gethygro()
-{
-	return this->hygrometrie;
-}
 
-float client::gettemp()
-{
-	return this->temperature;
-}
-
-
-void client::settemp(uint32_t temp)
-{
-	this->temperature = (float)temp;
-	this->tempset = true;
-}
-
-void client::sethygro(uint32_t hygro)
-{
-	this->hygrometrie = (float)hygro;
-	this->hygroset = true;
-}
 

@@ -14,7 +14,7 @@ void workerThreadsend()
 	client* clienttcp;
 	clienttcp = new client();
 	clienttcp->createsocket();
-	clienttcp->connectnode();
+	clienttcp->connectcard();
 	
 }
 

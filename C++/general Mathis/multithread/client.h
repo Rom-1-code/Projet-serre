@@ -16,7 +16,6 @@ struct clienttcpstruct
 	SOCKADDR_IN sin;
 	SOCKADDR_IN sinparameters;
 	
-	char buffertosend[9] = "yo node";
 	char buffer[60];
 };
 
@@ -69,14 +68,10 @@ public:
 
 	clienttcpstruct* getstruct();
 	void createsocket();
-	void connectnode();
+	void connectcard();
 	static void WorkerThreadSend(client* client);
 	static void WorkThreadReceiv(client* client);
-	static void WorkerThreadParameters(client* client);
 	static void sendReadRequest(client* client, int startAddress, int nbWord);
-	float gethygro();
-	float gettemp();
-	void settemp(uint32_t temp);
-	void sethygro(uint32_t hygro);
+	
 	
 };
