@@ -10,8 +10,8 @@ class bdd
 private:
 	MYSQL mysql;
 public:
-	bool initializeBdd();
-	bool connectBdd(const char *host, const char *login, const char *password, const char *bdd);
+	bool StartBdd();
+	bool connexionBdd(const char *host, const char *login, const char *password, const char *bdd);
 	bool query(const char *request);
 	void closeBdd();
 };

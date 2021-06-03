@@ -5,7 +5,7 @@ public:
 
 	float GetTempExt();
 	float GetTempInt();
-	float GetHygroTerre();
+	float GetHumiTerre();
 	float GetHygroAir();
 
 

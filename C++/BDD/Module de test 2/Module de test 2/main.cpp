@@ -8,59 +8,64 @@
 #include <string>
 #include <ctime>
 
-using namespace std;
+//using namespace std;
+
+
+
 
 int main() {
 	//Déclaration de la structure de type MYSQL
 	time_t actuel = time(0);
 	tm *ltm = localtime(&actuel);
-	ES* carte;
-	carte = new ES();
-	bdd BDD;
+	
 	int annee = 1900 + ltm->tm_year;
-	int mois = 1 + ltm->tm_mon;
+	int mois =  1 + ltm->tm_mon;
 	int jour = ltm->tm_mday;
 	int heures = ltm->tm_hour;
 	int minutes = ltm->tm_min;
-	char DATE[10];
-	char archiveDate[10];
+	int secondes = ltm->tm_sec;
+	char DATE[11];
 	snprintf(DATE, 11, "%d-0%d-%d\n", annee, mois, jour);
 	string date = DATE;
 
-	string heure;
-	heure = to_string(heures);
+	char HEURE[10];
+	snprintf(HEURE, 10, "%d:%d:%d\n", heures, minutes, secondes);
+	string heure = HEURE;
 
+	ES* carte;
+	carte = new ES();
+	bdd BDD;
 	float TempInt = carte->GetTempInt();
-	string tempint;
+	std::string tempint;
 	tempint = to_string(TempInt);
 	float TempExt = carte->GetTempExt();
-	string tempext;
+	std::string tempext;
 	tempext = to_string(TempExt);
 	float HygroAir = carte->GetHygroAir();
-	string hygroair;
+	std::string hygroair;
 	hygroair = to_string(HygroAir);
-	float HygroTerre = carte->GetHygroTerre();
-	string hygroterre;
-	hygroterre = to_string(HygroTerre);
+	float HumiTerre = carte->GetHumiTerre();
+	std::string humiterre;
+	humiterre = to_string(HumiTerre);
 
 	const char * host = "192.168.65.216";
 	const char * login = "root";
 	const char * password = "root";
 	const char * bdd = "Projet_Serre";
 
-	string request = "INSERT INTO `ValeurNum` ( `Temperature_int`, `Temperature_Ext`, `HumiditeAir`, `HumiditeTerre`, `Date`, `Heure`, `Etat`) VALUES ("+ tempint +", "+tempext+", " + hygroair + ", "+hygroterre+", '"+DATE+"', '"+heure+"', '1');";
+	std::string request = "INSERT INTO `ValeurNum` ( `Temperature_int`, `Temperature_Ext`, `HumiditeAir`, `HumiditeTerre`, `Date`, `Heure`, `Etat`) VALUES ("+ tempint +", "+tempext+", " + hygroair + ", "+humiterre+", '"+DATE+"', '" + HEURE + "', '1');";
 	
-	bool resultInitializeBdd;
-	bool resultConnectBdd;
+	bool resultStartBdd;
+	bool resultConnexionBdd;
 	bool resultQuery;
 
-	resultInitializeBdd = BDD.initializeBdd();
+	resultStartBdd = BDD.StartBdd();
 
-	if (resultInitializeBdd == true)
+	if (resultStartBdd == true)
 	{
-		resultConnectBdd = BDD.connectBdd(host, login, password, bdd);
+		resultConnexionBdd = BDD.connexionBdd(host, login, password, bdd);
 
-		if (resultConnectBdd == true)
+		if (resultConnexionBdd == true)
 		{
 			cout << "Connexion a la BDD OK !" << endl;
 			resultQuery = BDD.query(request.c_str());
@@ -71,14 +76,13 @@ int main() {
 			}
 			else
 			{
+				
 				cout << "Insertion en base PAS OK" << endl;
 			}
 		}
 	}
 
-	
 
-	
 
 	return 0;
 }
