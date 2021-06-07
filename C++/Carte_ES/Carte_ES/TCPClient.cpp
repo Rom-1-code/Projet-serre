@@ -31,7 +31,7 @@ void Client::CreateSocket()
 void Client::ConnectCarte()
 {
 	struct hostent *hostinfo = NULL;
-	SOCKADDR_IN sin = { 0 }; /* initialise la structure avec des 0 */
+	SOCKADDR_IN sin = { 0 }; /* initialise la structure avec des 0 _CRT*/
 	const char *hostname = "192.168.65.8";
 
 	sin.sin_addr.s_addr = inet_addr(hostname);
@@ -40,14 +40,15 @@ void Client::ConnectCarte()
 
 	if (connect(sock, (SOCKADDR *)&sin, sizeof(SOCKADDR)) == SOCKET_ERROR)
 	{
-		printf("erreur de connexion \n");
+		printf("Erreur de connexion \n");
 	}
 	else
 	{
-		printf("connecte \n\n");
+		printf("Connecter \n\n");
 	}
 }
 
+/*----------Envoi d'une trame à la carte E/S----------*/
 void Client::SendData(bool relay1, bool relay2, bool relay3, bool relay4)
 {
 	cout << "\nEnvoi d'une trame\n";

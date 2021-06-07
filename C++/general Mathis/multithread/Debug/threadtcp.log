@@ -1,0 +1,5 @@
+﻿  server.cpp
+c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\server.cpp(80): warning C4018: '<' : incompatibilité signed/unsigned
+  threadtcp.cpp
+  Génération de code en cours...
+  threadtcp.vcxproj -> C:\Users\mclermont\Desktop\Projet-serre\C++\general Mathis\multithread\Debug\threadtcp.exe
