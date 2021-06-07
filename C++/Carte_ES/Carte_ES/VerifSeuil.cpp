@@ -71,17 +71,22 @@ bool VerifSeuil::Verif_Vasistas(float TempInt, float TempExt, int Hygro, float S
 /*----------Vérification des seuils pour l'arrosage----------*/
 bool VerifSeuil::Verif_Arrosage(int Heure, int Minute, int Heure1, int Minute1)
 {
-	
+	string test;
+
 	// date / heure actuelle basée sur le système actuel
 	time_t actuel = time(0);
-	cout << "Nombre de sec depuis Janvier 1,1970:" << actuel << endl;
 	tm *ltm = localtime(&actuel);
 
 	// afficher divers member de la structure tm.
-	cout << "Année" << 1900 + ltm->tm_year << endl;
-	cout << "Mois: " << 1 + ltm->tm_mon << endl;
-	cout << "Jour: " << ltm->tm_mday << endl;
-	cout << "Heure: " << ltm->tm_hour << " Minute: " << ltm->tm_min;
+	int mois = 1 + ltm->tm_mon;
+	int jour = ltm->tm_mday;
+	int heure = ltm->tm_hour;
+	int minute = ltm->tm_min;
+
+	cout << "On est le " << jour << "/" << mois << " a " << heure << ":" << minute << endl;
+
+	//std::string request = "SELECT `Date_Debut`FROM `PlageHorraire` WHERE NumPlage = 1";
+	
 
 	/*float HeureActuel;
 	float MinuteActuel;
