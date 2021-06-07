@@ -62,6 +62,8 @@
 
         function displayEventMessage(id, msgEvent) {
             document.getElementById(id).innerHTML = JSON.stringify(msgEvent);
+
+
         }
 
         function callChart() {
@@ -73,9 +75,9 @@
             console.log(value1);
             var ctx = document.getElementById('myChart').getContext('2d');
             var myChart = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
-                    labels: ['Temperature_Int', 'Temperature_Ext', 'Humidite_Terre', 'Humidite_Air'],
+                    labels: ['8h', '10h', '12h', '14', '16', '18', '20h', '22h', '00h'],
                     datasets: [{
                         label: 'Valeurs pour la journée du {...}',
                         data: [value1, value2, value3, value4],
