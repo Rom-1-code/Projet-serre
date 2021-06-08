@@ -17,11 +17,11 @@ int main(int argc, char *argv[])
 	int* horairerecup;
 	VerifSeuil* Verif;
 	Verif = new VerifSeuil;
-	Verif->SetHumiSol(40);
-	Verif->SetHygro(60);
-	Verif->SetPlage(15,31);
-	Verif->SetTempExt(28);
-	Verif->SetTempInt(26);
+	Verif->SetHumiSol(20);
+	Verif->SetHygro(10);
+	Verif->SetPlage(20,10);
+	Verif->SetTempExt(40);
+	Verif->SetTempInt(1);
 	horairerecup = Verif->Get_PlageHoraire();
 	
 
@@ -38,19 +38,12 @@ int main(int argc, char *argv[])
 	Verif->AllumeBrumi();
 	Verif->AllumeChauffage();
 	Verif->AllumeVasistas();
+
 	Verif->GetMailAlert(-5, 100, 30);
 	
+	
+	
 
-
-	Serveurcpp* serveur;
-	serveur = new Serveurcpp();
-
-	//std::thread socket(createsocket);     
-
-	serveur->createsocket();
-	serveur->connect();
-	serveur->receiv();
-	//serveur->readbuffer();
 
 	
 	system("PAUSE");

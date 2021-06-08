@@ -1,5 +1,5 @@
-﻿  server.cpp
-c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\server.cpp(80): warning C4018: '<' : incompatibilité signed/unsigned
-  threadtcp.cpp
-  Génération de code en cours...
+﻿  client.cpp
+c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\client.cpp(40): warning C4309: '=' : troncation de valeur de constante
+c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\client.cpp(190): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\client.cpp(72): warning C4101: 'restoanalyse' : variable locale non référencée
   threadtcp.vcxproj -> C:\Users\mclermont\Desktop\Projet-serre\C++\general Mathis\multithread\Debug\threadtcp.exe

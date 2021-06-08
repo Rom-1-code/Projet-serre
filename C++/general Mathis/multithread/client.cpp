@@ -18,8 +18,9 @@ void SendThread(client * client)
 {
 	while (1)
 	{
-		client::sendReadRequest(client, 100, 4);
-		Sleep(5000);
+		
+		client::sendReadRequest(client, 100, 4); 
+		Sleep(3000);
 	}
 }
 
@@ -28,7 +29,7 @@ void client::sendReadRequest(client* client, int startAddress, int nbWord)
 {
 	char buffer[12];
 
-	int transactionId = client->transactionId++;
+	uint16_t transactionId = client->transactionId++;
 
 	buffer[0] = (transactionId & 0xFF00) >> 8; 
 	buffer[1] = transactionId & 0x00FF;
@@ -57,9 +58,17 @@ void ReceivThread(client* client)
 {
 	char buffer[200];
 	float temperatureInterieure;
+	float temperatureExterieure;
 	float humiditeInterieure;
+	float humiditesol1;
+	float humiditesol2;
+	float humiditesol3;
 	uint32_t tempint;
+	uint32_t tempint2;
 	uint32_t hygro;
+	uint32_t humi1;
+	uint32_t humi2;
+	uint32_t humi3;
 	uint32_t restoanalyse;
 
 	while (1)
@@ -73,8 +82,6 @@ void ReceivThread(client* client)
 
 		buffer[n] = '\0';
 
-		client->getModbusRequest(buffer[0]);
-
 		uint16_t transactionId = ((unsigned char)buffer[0] << 8) | (unsigned char)buffer[1];
 		printf("Numero de transaction : %d", transactionId);
 		printf("\n");
@@ -85,45 +92,110 @@ void ReceivThread(client* client)
 		std::string str = "0x";
 		char* buffertemp = new char[n];
 
-		if (request.startAddress == 100 && request.function == 3)
-		{
-			for (int i = 0; i < n; i++)
+	
+			if (request.startAddress == 100)
 			{
-				printf("%2.2hhx ", buffer[i]);
+
+				for (int i = 0; i < n; i++)
+				{
+					printf("%2.2hhx ", buffer[i]);
+				}
+
+				printf("\n");
+
+				for (int i = 9; i < (9 + 4); i++)
+				{
+					snprintf(buffertemp, 4, "%2.2hhx", buffer[i]);
+					str += buffertemp;
+				}
+				printf("\n");
+
+				sscanf_s(str.c_str(), "%x", &tempint);
+				temperatureInterieure = *((float*)&tempint);
+				printf(" la température est a %.3f degre avec le code hexa 0x%08x  \n", temperatureInterieure, tempint);
+
+
+
+				str = "0x";
+				for (int i = 13; i < (13 + 4); i++)
+				{
+					snprintf(buffertemp, 4, "%2.2hhx", buffer[i]);
+					str += buffertemp;
+				}
+				printf("\n");
+				sscanf_s(str.c_str(), "%x", &hygro);
+				humiditeInterieure = *((float*)&hygro);
+				printf(" l'hygrometrie est a %.3f pourcent avec le code hexa 0x%08x  \n", humiditeInterieure, hygro);
+
+				
+				delete buffertemp;
+
+
+				client::sendReadRequest(client, 300, 8);
+				
 			}
-			printf("\n");
-			for (int i = 9; i < (9+4); i++)
+			else if(request.startAddress == 300)
 			{
-				snprintf(buffertemp,4, "%2.2hhx", buffer[i]);
-				str += buffertemp;
+
+				for (int i = 0; i < n; i++)
+				{
+					printf("%2.2hhx ", buffer[i]);
+				}
+
+				printf("\n");
+
+				str = "0x";
+				for (int i = 9; i < 13; i++) //premiere valeur d'humidite
+				{
+					snprintf(buffertemp, 8, "%2.2hhx", buffer[i]);
+					str += buffertemp;
+				}
+				printf("\n");
+
+				sscanf_s(str.c_str(), "%x", &humi1);
+				humiditesol1 = *((float*)&humi1);
+
+				str = "0x";
+				for (int i = 13; i < 17; i++) //deuxieme valeur d'humidite
+				{
+					snprintf(buffertemp, 8, "%2.2hhx", buffer[i]);
+					str += buffertemp;
+				}
+
+				sscanf_s(str.c_str(), "%x", &humi2);
+				humiditesol2 = *((float*)&humi2);
+
+				str = "0x";
+				for (int i = 17; i < 21 ; i++) //troisieme valeur d'humidite
+				{
+					snprintf(buffertemp, 8, "%2.2hhx", buffer[i]);
+					str += buffertemp;
+				}
+
+				sscanf_s(str.c_str(), "%x", &humi3);
+				humiditesol3 = *((float*)&humi3);
+
+				str = "0x";
+				for (int i = 21; i < 25; i++) //valeur de temperature exterieure
+				{
+					snprintf(buffertemp, 8, "%2.2hhx", buffer[i]);
+					str += buffertemp;
+				}
+
+				sscanf_s(str.c_str(), "%x", &tempint2);
+				temperatureExterieure = *((float*)&humi3);
+
+				//conversion et moyenne des 3 valeurs d'humidite des sols :
+
+				float moyenne = ((humiditesol3 + humiditesol2 + humiditesol1)* 0.025) / 3;
+				moyenne = moyenne * 1000;
+
+				printf(" l humidite moyenne du sol est a %.3f pourcent \n", moyenne); //hexa 0x%08x humi1
+
+				DataQueue::getInstance()->addData(new SerreData(temperatureInterieure, humiditeInterieure, humiditesol1, 0));
 			}
-			printf("\n");
-
-			sscanf_s(str.c_str(), "%x", &tempint);
-			temperatureInterieure = *((float*)&tempint);
-			printf(" la temperature est a %.3f degre avec le code hexa 0x%08x  \n",temperatureInterieure,tempint);
+		
 			
-			
-
-			str = "0x";
-			for (int i = 13; i < (13 + 4); i++)
-			{
-				snprintf(buffertemp, 4, "%2.2hhx", buffer[i]);
-				str += buffertemp;
-			}
-			printf("\n");
-			sscanf_s(str.c_str(), "%x", &hygro);
-			humiditeInterieure = *((float*)&hygro);
-			printf(" l'hygrometrie est a %.3f pourcent avec le code hexa 0x%08x  \n",humiditeInterieure, hygro);
-			
-
-			DataQueue::getInstance()->addData(new SerreData(temperatureInterieure, humiditeInterieure, 0, 0));
-		}
-		else
-		{
-			printf("Erreur - mauvaise adresse \n");
-		}
-
 		
 
 		if (request.function >= 0)
