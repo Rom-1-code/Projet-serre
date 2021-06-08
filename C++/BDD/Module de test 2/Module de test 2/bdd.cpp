@@ -1,6 +1,6 @@
 #include "bdd.h"
 
-bool bdd::initializeBdd()
+bool bdd::StartBdd()
 {
 	MYSQL * resultMysql_init;
 
@@ -15,13 +15,13 @@ bool bdd::initializeBdd()
 		return false;
 	}
 }
-bool bdd::connectBdd(const char *host, const char *login, const char *password, const char *bdd)
+bool bdd::connexionBdd(const char *host, const char *login, const char *password, const char *bdd)
 {
-	MYSQL * resultConnexionToBdd;
+	MYSQL * resultConnexionBdd;
 
-	resultConnexionToBdd = mysql_real_connect(&mysql, host, login, password, bdd, 0, NULL, 0);
+	resultConnexionBdd = mysql_real_connect(&mysql, host, login, password, bdd, 0, NULL, 0);
 
-	if (resultConnexionToBdd != NULL)
+	if (resultConnexionBdd != NULL)
 	{
 		return true;
 	}

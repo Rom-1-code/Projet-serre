@@ -10,7 +10,7 @@ float ES::GetTempInt()
 	return 32.5;
 }
 
-float ES::GetHygroTerre()
+float ES::GetHumiTerre()
 {
 	return 20.5;
 }

@@ -1,8 +1,8 @@
 var net = require('net');
 
 
-const port = 2590;
-const host = '192.168.64.183';
+const port = 2525;
+const host = '192.168.65.62';
 
 // Create a new TCP client.
 const client = new net.Socket();
