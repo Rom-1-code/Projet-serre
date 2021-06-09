@@ -1,4 +1,4 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include "DataQueue.h"
 #include "client.h"
 #include <iostream>
 #include <thread>
@@ -6,12 +6,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef WIN32
+
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <windows.h>
 #include <winsock2.h>
 #include <WS2tcpip.h>
 #pragma comment (lib,"ws2_32.lib")
 
-#include "DataQueue.h"
+#endif defined (linux)
+
+
+#include <sys/types.h>
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR -1
+#define closesocket(s) close(s)
+typedef struct sockaddr_in SOCKADDR_IN;
+typedef struct sockaddr SOCKADDR;
+typedef struct in_addr IN_AD;
+
 
 
 void SendThread(client * client)
@@ -237,11 +250,14 @@ void client::WorkerThreadSend(client* client)
 
 void client::createsocket()
 {
+#ifdef WIN32
+
 	WSADATA wsaData;
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
 
 	mystruct.sock = socket(AF_INET, SOCK_STREAM, 0);
-	
+
+#endif
 
 	if (mystruct.sock == INVALID_SOCKET)
 	{

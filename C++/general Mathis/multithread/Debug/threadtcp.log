@@ -1,5 +1,9 @@
 ﻿  client.cpp
-c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\client.cpp(40): warning C4309: '=' : troncation de valeur de constante
-c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\client.cpp(198): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
-c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\client.cpp(72): warning C4101: 'restoanalyse' : variable locale non référencée
+c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\client.cpp(21): warning C4005: 'INVALID_SOCKET' : redéfinition de macro
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winsock2.h(391): note: voir la définition précédente de 'INVALID_SOCKET'
+c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\client.cpp(22): warning C4005: 'SOCKET_ERROR' : redéfinition de macro
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winsock2.h(392): note: voir la définition précédente de 'SOCKET_ERROR'
+c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\client.cpp(53): warning C4309: '=' : troncation de valeur de constante
+c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\client.cpp(211): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+c:\users\mclermont\desktop\projet-serre\c++\general mathis\multithread\client.cpp(85): warning C4101: 'restoanalyse' : variable locale non référencée
   threadtcp.vcxproj -> C:\Users\mclermont\Desktop\Projet-serre\C++\general Mathis\multithread\Debug\threadtcp.exe
