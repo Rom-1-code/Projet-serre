@@ -100,6 +100,7 @@ void ReceivThread(client* client)
 				{
 					printf("%2.2hhx ", buffer[i]);
 				}
+			
 
 				printf("\n");
 
@@ -110,8 +111,15 @@ void ReceivThread(client* client)
 				}
 				printf("\n");
 
+
 				sscanf_s(str.c_str(), "%x", &tempint);
 				temperatureInterieure = *((float*)&tempint);
+			
+				
+				if(buffer[9] & (1<<7)) //on cherche à connaitre le signe du bit de poids fort
+				{
+					printf("nombre negatif \n");
+				}
 				printf(" la température est a %.3f degre avec le code hexa 0x%08x  \n", temperatureInterieure, tempint);
 
 
