@@ -6,6 +6,9 @@
 #include <Windows.h>
 #include <mysql.h>
 #include <cstring>
+#include <stdio.h>
+#include <stdlib.h>
+#include <winsock.h>
 
 #include "VerifSeuil.h"
 #include "TCPClient.h"
@@ -31,6 +34,7 @@ int main()
 
 	bool resultStartBdd;
 	bool resultConnexionBdd;
+	char resultQuery [20];
 
 	resultStartBdd = BDD.StartBdd();
 
@@ -41,7 +45,7 @@ int main()
 
 		if (resultConnexionBdd == true)
 		{
-			cout << "Connexion a la BDD OK !" << endl;
+			cout << "Connexion a la BDD OK !" << endl << endl;
 		}
 		else
 		{
@@ -53,8 +57,11 @@ int main()
 		cout << "erreur";
 	}
 
-	client.CreateSocket();
-	client.ConnectCarte();
+	resultQuery[0] = BDD.queryaff();
+	cout << resultQuery[0];
+
+	//client.CreateSocket();
+	//client.ConnectCarte();
 
 	/*----------Appel des méthodes pour la vérification des seuils----------*/
 
