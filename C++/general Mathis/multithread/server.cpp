@@ -4,12 +4,17 @@
 #include <stdio.h>
 #include <thread>
 #include <mutex>
+
+
+#ifdef WIN32
 #include <stdlib.h>
 #include <WS2tcpip.h>
 #pragma comment (lib,"ws2_32.lib")
+#endif
 
 #include "DataQueue.h"
 #include <algorithm>
+
 
 
 std::mutex server::synchro;
@@ -22,21 +27,18 @@ void ClientThread(SOCKET client)
 
 void server::ClientThreadLocal(SOCKET client)
 {
-	char buffer[10];
+	char buffer[500];
 	int n = 0;
-	
 
-	while(n >= 0)
-	{
-		
-		n = 0;
+		n = recv(client, buffer, 500, 0);
 
-		if ((n = recv(client,buffer,10, 0)) < 0)
+		for (int i = 0; i < n; i++)
 		{
-			Sleep(100);
+			printf("%c", buffer[i]);
 		}
-			//printf("temperature recupere = %f ", buffer[0]);
-	}
+		printf("\n");
+
+	
 
 	printf("Client deconnecte\n");
 	synchro.lock();
@@ -77,6 +79,7 @@ void server::WorkerThreadConnectClient(server* server)
 			synchro.lock();
 			char buffer[500];
 			snprintf(buffer, 500, "%.2f;%.2f;%.2f;%.2f\n", data->temperatureInterieure, data->humiditeInterieure, data->temperatureExterieure, data->humiditeSol);
+			
 			for(int i = 0; i < connectedClients.size(); i++)
 			{
 				send(connectedClients[i], buffer, strlen(buffer), 0);
@@ -98,7 +101,7 @@ void server::createsocket()
 	WSADATA wsaData;
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
 
-
+#endif
 	int sock2 = socket(AF_INET, SOCK_STREAM, 0);
 
 	if (sock2 == INVALID_SOCKET)
@@ -111,7 +114,7 @@ void server::createsocket()
 		std::cout << "socket local valide" << std::endl;
 	}
 	
-#endif
+
 }
 
 void server::connect()
@@ -146,6 +149,7 @@ void server::connect()
 	workerconnect.detach();
 	std::thread workerconnectclient(WorkerThreadConnectClient,this);
 	workerconnectclient.detach();
+	
 }
 
 
@@ -154,10 +158,6 @@ void server::readbuffer()
 	std::cout << buffer << std::endl;
 }
 
-void server::close()
-{
-	closesocket(mystruct.sock);
-}
 
 tcpstruct* server::getstruct()
 {

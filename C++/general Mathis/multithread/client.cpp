@@ -1,4 +1,4 @@
-#include "DataQueue.h"
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "client.h"
 #include <iostream>
 #include <thread>
@@ -6,26 +6,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef WIN32
 
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#ifdef WIN32
 #include <windows.h>
 #include <winsock2.h>
 #include <WS2tcpip.h>
 #pragma comment (lib,"ws2_32.lib")
+#endif
 
-#endif defined (linux)
-
-
-#include <sys/types.h>
-#define INVALID_SOCKET -1
-#define SOCKET_ERROR -1
-#define closesocket(s) close(s)
-typedef struct sockaddr_in SOCKADDR_IN;
-typedef struct sockaddr SOCKADDR;
-typedef struct in_addr IN_AD;
-
-
+#include "DataQueue.h"
 
 void SendThread(client * client)
 {
@@ -33,7 +22,7 @@ void SendThread(client * client)
 	{
 		
 		client::sendReadRequest(client, 100, 4); 
-		Sleep(3000);
+		Sleep(1000);
 	}
 }
 
@@ -71,7 +60,7 @@ void ReceivThread(client* client)
 {
 	char buffer[200];
 	float temperatureInterieure;
-	float temperatureExterieure;
+	float temperatureExterieure=0; //simulee
 	float humiditeInterieure;
 	float humiditesol1;
 	float humiditesol2;
@@ -195,7 +184,7 @@ void ReceivThread(client* client)
 
 				sscanf_s(str.c_str(), "%x", &humi3);
 				humiditesol3 = *((float*)&humi3);
-
+/*
 				str = "0x";
 				for (int i = 21; i < 25; i++) //valeur de temperature exterieure
 				{
@@ -204,7 +193,19 @@ void ReceivThread(client* client)
 				}
 
 				sscanf_s(str.c_str(), "%x", &tempint2);
-				temperatureExterieure = *((float*)&humi3);
+				temperatureExterieure = *((float*)&tempint2);
+
+				str = "0x";
+				for (int i = 25; i < 29; i++)
+				{
+					snprintf(buffertemp, 8, "%2.2hhx", buffer[i]);
+					str += buffertemp;
+				}*/
+				/*
+				sscanf_s(str.c_str(), "%x", &tempint2);
+				temperatureExterieure = *((float*)&tempint2);
+				*/
+				//printf("la temperature exterieure est de %.3f degre \n", temperatureExterieure);
 
 				//conversion et moyenne des 3 valeurs d'humidite des sols :
 
@@ -213,7 +214,7 @@ void ReceivThread(client* client)
 
 				printf(" l humidite moyenne du sol est a %.3f pourcent \n", moyenne); //hexa 0x%08x humi1
 
-				DataQueue::getInstance()->addData(new SerreData(temperatureInterieure, humiditeInterieure, humiditesol1, 0));
+				DataQueue::getInstance()->addData(new SerreData(temperatureInterieure, humiditeInterieure, moyenne, temperatureExterieure));
 			}
 		
 			
