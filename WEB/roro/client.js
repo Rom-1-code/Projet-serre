@@ -8,12 +8,9 @@ const host = '192.168.64.183';
 const client = new net.Socket();
 // requette de connexion au serveur
 client.connect({ port: port, host: host }),
-    function() {
-        // If there is no error, the server has accepted the request and created a new 
-        // socket dedicated to us.
-        console.log('TCP connection established with the server.');
 
-        // The client can now send data to the server by writing to its socket.
+    function() {
+        console.log('TCP connection established with the server.');
         client.write('Hello, server.');
     };
 
