@@ -3,10 +3,8 @@
 #include "client.h"
 #include "server.h"
 #include <stdlib.h>
-#include <time.h>
-#include <Windows.h>
 #include <mutex>
-#include <conio.h>
+
 
 
 void workerThreadsend()
@@ -38,8 +36,8 @@ int main(int argc, char ** argv)
 	worker2.detach();
 
 	
-	_getch();
-		//system("pause");
+	
+	system("pause");
 
 	return 0;
 }

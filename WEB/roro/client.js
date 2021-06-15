@@ -1,12 +1,12 @@
 var net = require('net');
 
 
-const port = 2590;
-const host = '192.168.64.183';
+const port = 2525;
+const host = '192.168.65.62';
 
-// création d'un nouveau client
+// Create a new TCP client.
 const client = new net.Socket();
-// requette de connexion au serveur
+// Send a connection request to the server.
 client.connect({ port: port, host: host }),
 
     function() {
@@ -15,11 +15,11 @@ client.connect({ port: port, host: host }),
     };
 
 client.setEncoding('utf8');
-//afficher les données envoyer par le serveur
+
 client.on('data', function(data) {
     console.log('Data from server:' + data);
 });
-// message de fin de connexion
+
 setTimeout(function() {
     client.end('Bye bye server');
 }, 10000);

@@ -151,15 +151,15 @@ bool VerifSeuil::GetMailAlert(int TempInttest, int Hygrotest, int HumiSoltest)
 			NULL);
 		rc = smtp_address_add(smtp,
 			SMTP_ADDRESS_FROM,
-			"BTSSN2-Projetserre",
-			"Serre");
+			"BTSSN2",
+			"Mail d'urgence");
 		rc = smtp_address_add(smtp,
 			SMTP_ADDRESS_TO,
 			"mclermont@la-providence.net",
-			"Administration de la serre");
+			"Administration");
 		rc = smtp_header_add(smtp,
 			"Subject",
-			"Alerte");
+			"Alerte Seuils");
 
 		/* rc = smtp_attachment_add_mem(smtp,
 			"test.txt",
@@ -167,7 +167,7 @@ bool VerifSeuil::GetMailAlert(int TempInttest, int Hygrotest, int HumiSoltest)
 			-1); */
 
 		rc = smtp_mail(smtp,
-			"probleme de seuil dans la serre,veuillez intervenir");
+			"intervention requise");
 		rc = smtp_close(smtp);
 		if (rc != SMTP_STATUS_OK) {
 			printf("probleme %s\n", smtp_status_code_errstr((smtp_status_code)rc));

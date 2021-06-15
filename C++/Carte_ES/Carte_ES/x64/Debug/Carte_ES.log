@@ -1,2 +1,13 @@
-﻿  Carte_ES.cpp
-  Carte_ES.vcxproj -> C:\Users\ClémentS\Desktop\Carte_ES\x64\Debug\Carte_ES.exe
+﻿  bdd.cpp
+c:\users\cléments\desktop\projet-serre\c++\bdd\module de test 2\module de test 2\bdd.cpp(37): warning C4267: 'argument' : conversion de 'size_t' en 'unsigned long', perte possible de données
+  Carte_ES.cpp
+  TCPClient.cpp
+c:\users\cléments\desktop\projet-serre\c++\carte_es\carte_es\tcpclient.cpp(19): warning C4244: '=' : conversion de 'SOCKET' en 'int', perte possible de données
+  VerifSeuil.cpp
+  Génération de code en cours...
+bdd.obj : error LNK2019: symbole externe non résolu mysql_init référencé dans la fonction "public: bool __cdecl bdd::StartBdd(void)" (?StartBdd@bdd@@QEAA_NXZ)
+bdd.obj : error LNK2019: symbole externe non résolu mysql_real_connect référencé dans la fonction "public: bool __cdecl bdd::connexionBdd(char const *,char const *,char const *,char const *)" (?connexionBdd@bdd@@QEAA_NPEBD000@Z)
+bdd.obj : error LNK2019: symbole externe non résolu mysql_real_query référencé dans la fonction "public: bool __cdecl bdd::query(char const *)" (?query@bdd@@QEAA_NPEBD@Z)
+bdd.obj : error LNK2019: symbole externe non résolu mysql_close référencé dans la fonction "public: void __cdecl bdd::closeBdd(void)" (?closeBdd@bdd@@QEAAXXZ)
+C:\Users\ClémentS\Desktop\Projet-serre\C++\BDD\mysql-connector-c-6.1.11-win32\lib\libmysql.lib : warning LNK4272: type d'ordinateur bibliothèque 'x86' en conflit avec le type d'ordinateur cible 'x64'
+C:\Users\ClémentS\Desktop\Projet-serre\C++\Carte_ES\x64\Debug\Carte_ES.exe : fatal error LNK1120: 4 externes non résolus
