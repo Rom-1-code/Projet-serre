@@ -1,0 +1,8 @@
+﻿  Carte_ES.cpp
+  TCPClient.cpp
+d:\documents\projet-serre\c++\carte_es\carte_es\tcpclient.cpp(19): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
+  VerifSeuil.cpp
+  Generating code
+  All 21 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Carte_ES.vcxproj -> D:\Documents\Projet-serre\C++\Carte_ES\x64\Release\Carte_ES.exe
