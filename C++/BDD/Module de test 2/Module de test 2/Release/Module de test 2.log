@@ -1,0 +1,8 @@
+﻿  bdd.cpp
+  ES.cpp
+d:\documents\projet-serre\c++\bdd\module de test 2\module de test 2\es.cpp(5): warning C4305: 'return': truncation from 'double' to 'float'
+  main.cpp
+  Generating code
+  All 121 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Module de test 2.vcxproj -> D:\Documents\Projet-serre\C++\BDD\Module de test 2\Release\Module de test 2.exe
